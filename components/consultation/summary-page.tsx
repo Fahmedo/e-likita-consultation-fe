@@ -13,8 +13,8 @@ import {
   ArrowLeft,
   Send,
   Download,
+  Pencil,
 } from 'lucide-react';
-import { on } from 'events';
 import usePost from '@/service/usePost';
 import { toast } from 'sonner';
 import Loader from './loader';
@@ -25,10 +25,11 @@ export function SummaryPage({
 }: {
   pageMovement: (step: number) => void;
 }) {
- 
-  const { state } = useConsultation();
-  const { makeRequest, isLoading, isSuccess } = usePost(`${baseUrl}/consultations`, 'POST');
-
+  const { state, dispatch } = useConsultation();
+  const { makeRequest, isLoading, isSuccess } = usePost(
+    `${baseUrl}/consultations`,
+    'POST'
+  );
   const getSeverityColor = (severity: string) => {
     switch (severity.toLowerCase()) {
       case 'mild':
@@ -41,7 +42,12 @@ export function SummaryPage({
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
-
+  const handleReset = () => {
+    dispatch({
+      type: 'RESET',
+    });
+    pageMovement(0);
+  };
   const handleSubmit = () => {
     const payload = {
       ...state.patientInfo,
@@ -190,14 +196,24 @@ export function SummaryPage({
             Back
           </Button>
           {isSuccess ? (
-            <Button
-              type="submit"
-              className="flex items-center gap-2"
-              onClick={() => window.print()}
-            >
-              <Download className="w-4 h-4" />
-              Download a copy
-            </Button>
+            <div className="flex justify-between md:gap-5 pt-4">
+              <Button
+                type="submit"
+                className="flex items-center gap-2"
+                onClick={handleReset}
+              >
+                <Pencil className="w-4 h-4" />
+                Start a new Consultation
+              </Button>
+              <Button
+                type="submit"
+                className="flex items-center gap-2"
+                onClick={() => window.print()}
+              >
+                <Download className="w-4 h-4" />
+                Download a copy
+              </Button>
+            </div>
           ) : (
             <Button
               type="submit"
