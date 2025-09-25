@@ -183,7 +183,7 @@ export function PatientInfoPage({
               <Label htmlFor="address">Address *</Label>
               <Input
                 id="address"
-                type="tel"
+                type="text"
                 value={formData.address ?? ''}
                 onChange={(e) => handleInputChange('address', e.target.value)}
                 placeholder="enter your address"
